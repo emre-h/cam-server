@@ -38,11 +38,6 @@ bufferSize = 2048
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 UDPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-def rec():
-    while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
-        print("data has been taken")
-
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -65,8 +60,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    data = UDPServerSocket.recvfrom(bufferSize)[0]
                     frame = data
-
                     self.wfile.write(b'--FRAME\r\n')
                     self.send_header('Content-Type', 'image/jpeg')
                     self.send_header('Content-Length', len(frame))
@@ -89,10 +84,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
     
 try:
-    thread = threading.Thread(target=rec, args=[])
-    thread.start()
-
-    address = ('', 3306)
+    address = ('', 3700)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 finally:
