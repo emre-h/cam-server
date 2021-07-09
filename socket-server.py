@@ -36,6 +36,7 @@ data = bytearray()
 bufferSize = 4096*2
 
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+UDPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 class StreamingOutput(object):
     def __init__(self):
@@ -76,6 +77,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    data = UDPServerSocket.recvfrom(bufferSize)[0]
                     frame = data
 
                     self.wfile.write(b'--FRAME\r\n')
@@ -84,7 +86,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
-                    data = UDPServerSocket.recvfrom(bufferSize)[0]
+                    
 
             except Exception as e:
                 logging.warning(
