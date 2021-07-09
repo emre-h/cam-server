@@ -60,6 +60,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    time.sleep(0.1)
                     data = UDPServerSocket.recvfrom(bufferSize)[0]
                     while data != bytearray():
                         
