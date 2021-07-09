@@ -72,7 +72,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    frame = StreamingOutput(data)
+                    frame = data
                     self.wfile.write(b'--FRAME\r\n')
                     self.send_header('Content-Type', 'image/jpeg')
                     self.send_header('Content-Length', len(frame))
@@ -87,27 +87,19 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_error(404)
             self.end_headers()
 
-def listenThread():
+class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
-    # Bind to address and ip
-
     bufferSize = 4096*4
-
     UDPServerSocket.bind(("0.0.0.0", 3500))
     print('Listening on port %s ...' % 3500)
 
+    allow_reuse_address = True
+    daemon_threads = True
+    
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
 
-class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
-    allow_reuse_address = True
-    daemon_threads = True
-
 try:
-    t1 = Thread(target=listenThread)
-    t1.start()
-
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()    
