@@ -28,15 +28,6 @@ PAGE="""\
 </html>
 """
 
-UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
-# Bind to address and ip
-
-bufferSize = 4096
-
-UDPServerSocket.bind(("0.0.0.0", 3500))
-print('Listening on port %s ...' % 3500)
-
 data = bytearray()
 
 class StreamingOutput(object):
@@ -104,11 +95,20 @@ try:
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 
+    UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+    # Bind to address and ip
+
+    bufferSize = 4096
+
+    UDPServerSocket.bind(("0.0.0.0", 3500))
+    print('Listening on port %s ...' % 3500)
+
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
+        
 finally:
     print("stopped")
-
 
     #address = bytesAddressPair[1]
 
