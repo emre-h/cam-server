@@ -29,7 +29,7 @@ msgFromClient       = "Hello UDP Server"
 
 serverAddressPort   = ('63.33.239.182', 3500)
 
-bufferSize          = 2048
+bufferSize          = 1024
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
@@ -99,7 +99,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-with picamera.PiCamera(resolution='320x240', framerate=24) as camera:
+with picamera.PiCamera(resolution='320x240', framerate=12) as camera:
     output = StreamingOutput()
     # Uncomment the next line to change your Pi's Camera rotation (in degrees)
     #camera.rotation = 90
