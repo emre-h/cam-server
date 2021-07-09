@@ -105,12 +105,11 @@ try:
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
 
-        if not x:
+        if x:
             address = ('', 3306)
             server = StreamingServer(address, StreamingHandler)
             server.serve_forever()
             x = False
-
 finally:
     print("stopped")
 
