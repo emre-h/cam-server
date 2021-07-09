@@ -34,12 +34,8 @@ bufferSize          = 4096
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def send_data(data):
-    output = io.BytesIO()
-    with data as image:
-        image.thumbnail((200, 200), Image.ANTIALIAS)
-        image.save(output, format="JPEG")
-        thumbnail_as_string = base64.b64encode(output.getvalue()).decode()
-        UDPClientSocket.sendto(thumbnail_as_string, serverAddressPort)
+    UDPClientSocket.sendto(data, serverAddressPort)
+        
 
 class StreamingOutput(object):
     def __init__(self):
