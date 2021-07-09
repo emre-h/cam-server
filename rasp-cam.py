@@ -1,4 +1,5 @@
 import io
+from traceback import FrameSummary
 import picamera
 import struct
 import logging
@@ -7,6 +8,7 @@ import _thread
 import socket
 from threading import Condition
 from http import server
+from threading import Thread
 
 import time
 import base64
@@ -25,13 +27,14 @@ PAGE="""\
 </html>
 """
 
-msgFromClient       = "Hello UDP Server"
-
 serverAddressPort   = ('63.33.239.182', 3500)
 
 bufferSize          = 2048
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+def send(pack):
+    UDPClientSocket.sendto(pack, serverAddressPort)
 
 class StreamingOutput(object):
     def __init__(self):
@@ -86,6 +89,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     
                     UDPClientSocket.sendto(frame, serverAddressPort)
                     #print("sending frame...")
+                    thread = threading.Thread(target=send, args=[frame])
+                    thread.start()
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
