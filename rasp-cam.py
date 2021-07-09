@@ -3,9 +3,14 @@ import picamera
 import struct
 import logging
 import socketserver
+import _thread
 import socket
 from threading import Condition
 from http import server
+
+import base64
+import io
+from PIL import Image
 
 PAGE="""\
 <html>
@@ -28,7 +33,12 @@ bufferSize          = 4096*6
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def send_data(data):
-    UDPClientSocket.sendto(data, serverAddressPort)
+    output = io.BytesIO()
+    with data as image:
+        image.thumbnail((400, 400), Image.ANTIALIAS)
+        image.save(output, format="JPEG")
+        thumbnail_as_string = base64.b64encode(output.getvalue()).decode()
+        UDPClientSocket.sendto(thumbnail_as_string, serverAddressPort)
 
 class StreamingOutput(object):
     def __init__(self):
@@ -80,6 +90,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
+                    
                     send_data(frame)
             except Exception as e:
                 logging.warning(

@@ -12,6 +12,8 @@ import os
 import io
 import image
 
+import base64
+
 from array import array
 
 PAGE="""\
@@ -63,7 +65,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     data = UDPServerSocket.recvfrom(bufferSize)[0]
 
                     while data != bytearray():
-                        frame = data
+                        frame = base64.b64decode(data)
 
                         self.wfile.write(b'--FRAME\r\n')
                         self.send_header('Content-Type', 'image/jpeg')
