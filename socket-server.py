@@ -83,6 +83,13 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+try:
+    address = ('', 3306)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()
+finally:
+    print("stopped")
+
 while True:
     # Wait for client connections
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
