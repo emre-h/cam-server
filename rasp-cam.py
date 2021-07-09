@@ -31,11 +31,6 @@ serverAddressPort   = ('63.33.239.182', 3500)
 
 bufferSize          = 4096*2
 
-UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
-def send_data(data):
-    UDPClientSocket.sendto(data, serverAddressPort)
-
 class StreamingOutput(object):
     def __init__(self):
         self.frame = None
@@ -86,8 +81,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
-                    
-                    send_data(frame)
+                    UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+                    UDPClientSocket.sendto(frame, serverAddressPort)
+                    UDPClientSocket.close()
                     #print("sending frame...")
             except Exception as e:
                 logging.warning(
