@@ -57,6 +57,8 @@ class StreamingOutput(object):
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
+        
         if self.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
@@ -77,7 +79,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    data = UDPServerSocket.recvfrom(bufferSize)[0]
                     frame = data
 
                     self.wfile.write(b'--FRAME\r\n')
