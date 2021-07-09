@@ -2,6 +2,9 @@ import socket
 import struct
 import pickle
 
+import threading
+from threading import Thread
+
 import logging
 import socketserver
 import socket
@@ -84,6 +87,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_error(404)
             self.end_headers()
 
+def listenThread():
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
@@ -103,8 +109,8 @@ try:
     UDPServerSocket.bind(("0.0.0.0", 3500))
     print('Listening on port %s ...' % 3500)
 
-    while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
+    t1 = Thread(target=listenThread)
+    t1.start()
         
 finally:
     print("stopped")
