@@ -88,18 +88,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
 
 def listenThread():
-    while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
-
-class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
-    allow_reuse_address = True
-    daemon_threads = True
-
-try:
-    address = ('', 3306)
-    server = StreamingServer(address, StreamingHandler)
-    server.serve_forever()
-
     UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
     # Bind to address and ip
@@ -108,10 +96,21 @@ try:
 
     UDPServerSocket.bind(("0.0.0.0", 3500))
     print('Listening on port %s ...' % 3500)
+    
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 
+class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+try:
     t1 = Thread(target=listenThread)
     t1.start()
-        
+
+    address = ('', 3306)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()    
 finally:
     print("stopped")
 
