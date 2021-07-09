@@ -60,10 +60,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    time.sleep(0.1)
                     data = UDPServerSocket.recvfrom(bufferSize)[0]
+
                     while data != bytearray():
-                        
                         frame = data
 
                         self.wfile.write(b'--FRAME\r\n')
@@ -72,6 +71,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(frame)
                         self.wfile.write(b'\r\n')
+                        time.sleep(0.1)
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
