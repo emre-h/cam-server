@@ -32,7 +32,7 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 # Bind to address and ip
 
-bufferSize = 4096*2
+bufferSize = 4096
 
 UDPServerSocket.bind(("0.0.0.0", 3500))
 print('Listening on port %s ...' % 3500)
@@ -57,8 +57,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Age', 0)
             self.send_header('Cache-Control', 'no-cache, private')
             self.send_header('Pragma', 'no-cache')
-            self.send_header(
-                'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
             try:
                 while True:
