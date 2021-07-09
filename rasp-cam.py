@@ -1,12 +1,10 @@
 import io
-from traceback import FrameSummary
 import picamera
 import logging
 import socketserver
 import socket
 from threading import Condition
 from http import server
-from threading import Thread
 
 import io
 from PIL import Image

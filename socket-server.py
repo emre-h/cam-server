@@ -1,23 +1,10 @@
 import socket
-import struct
-import pickle
-
-import threading
 from threading import Thread
 
 import logging
 import socketserver
 import socket
-from threading import Condition
 from http import server
-import time
-import os
-import io
-import image
-
-import base64
-
-from array import array
 
 PAGE="""\
 <html>
