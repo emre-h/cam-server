@@ -7,7 +7,7 @@ import socketserver
 import socket
 from threading import Condition
 from http import server
-
+import time
 import os
 import io
 import image
@@ -60,21 +60,19 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    
-                    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-
-                    data = bytesAddressPair[0]
-
-                    with data.condition:
-                        data.condition.wait()
-                        frame = data
+                    data = UDPServerSocket.recvfrom(bufferSize)[0]
+                    while data != bytearray():
                         
-                    self.wfile.write(b'--FRAME\r\n')
-                    self.send_header('Content-Type', 'image/jpeg')
-                    self.send_header('Content-Length', len(frame))
-                    self.end_headers()
-                    self.wfile.write(frame)
-                    self.wfile.write(b'\r\n')
+                        with data.condition:
+                            data.condition.wait()
+                            frame = data
+
+                        self.wfile.write(b'--FRAME\r\n')
+                        self.send_header('Content-Type', 'image/jpeg')
+                        self.send_header('Content-Length', len(frame))
+                        self.end_headers()
+                        self.wfile.write(frame)
+                        self.wfile.write(b'\r\n')
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
