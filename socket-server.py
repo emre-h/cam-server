@@ -32,7 +32,7 @@ UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 # Bind to address and ip
 
-bufferSize = 4096*6
+bufferSize = 4096*2
 
 UDPServerSocket.bind(("0.0.0.0", 3500))
 print('Listening on port %s ...' % 3500)
