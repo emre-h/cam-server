@@ -102,15 +102,15 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     
 try:
     x = True
-    
-    while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
 
+    while True:
         if x:
             address = ('', 3306)
             server = StreamingServer(address, StreamingHandler)
             server.serve_forever()
             x = False
+        
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 finally:
     print("stopped")
 
