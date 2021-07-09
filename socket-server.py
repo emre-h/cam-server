@@ -101,11 +101,16 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
     
 try:
-    address = ('', 3306)
-    server = StreamingServer(address, StreamingHandler)
-    server.serve_forever()
+    x = True
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
+
+        if not x:
+            address = ('', 3306)
+            server = StreamingServer(address, StreamingHandler)
+            server.serve_forever()
+            x = False
+
 finally:
     print("stopped")
 
