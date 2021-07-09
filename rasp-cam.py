@@ -83,12 +83,14 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.wfile.write(b'\r\n')
                     UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
                     UDPClientSocket.sendto(frame, serverAddressPort)
-                    UDPClientSocket.close()
+                    
                     #print("sending frame...")
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
+            finally:
+                UDPClientSocket.close()
         else:
             self.send_error(404)
             self.end_headers()
