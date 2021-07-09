@@ -63,9 +63,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     data = UDPServerSocket.recvfrom(bufferSize)[0]
                     while data != bytearray():
                         
-                        with data.condition:
-                            data.condition.wait()
-                            frame = data
+                        frame = data
 
                         self.wfile.write(b'--FRAME\r\n')
                         self.send_header('Content-Type', 'image/jpeg')
