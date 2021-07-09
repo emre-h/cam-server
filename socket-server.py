@@ -83,7 +83,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.send_header('Content-Type', 'image/jpeg')
                     self.send_header('Content-Length', len(frame))
                     self.end_headers()
-                    self.wfile.write(b(frame))
+                    self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
             except Exception as e:
                 logging.warning(
@@ -101,16 +101,13 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
     
 try:
-    x = True
+    x = False
+    address = ('', 3306)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()
 
     while True:
-        if x:
-            address = ('', 3306)
-            server = StreamingServer(address, StreamingHandler)
-            server.serve_forever()
-            x = False
-        
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
+        data = UDPServerSocket.recvfrom(bufferSize)[1]
 finally:
     print("stopped")
 
