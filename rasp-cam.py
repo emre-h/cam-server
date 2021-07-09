@@ -25,7 +25,7 @@ PAGE="""\
 
 serverAddressPort   = ('63.33.239.182', 3600)
 
-bufferSize          = 2048
+bufferSize          = 4096*2
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
