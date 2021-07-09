@@ -89,8 +89,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     
                     UDPClientSocket.sendto(frame, serverAddressPort)
                     #print("sending frame...")
-                    thread = threading.Thread(target=send, args=[frame])
-                    thread.start()
+                    send(frame)
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
