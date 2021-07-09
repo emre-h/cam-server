@@ -86,10 +86,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
-                    
-                    UDPClientSocket.sendto(frame, serverAddressPort)
                     #print("sending frame...")
-                    send(frame)
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
@@ -107,6 +104,7 @@ with picamera.PiCamera(resolution='160x120', framerate=12) as camera:
     output = StreamingOutput()
     # Uncomment the next line to change your Pi's Camera rotation (in degrees)
     #camera.rotation = 90
+    UDPClientSocket.sendto(output, serverAddressPort)
     camera.start_recording(output, format='mjpeg')
     try:
         address = ('', 8000)
