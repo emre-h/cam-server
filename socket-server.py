@@ -33,7 +33,7 @@ PAGE="""\
 
 data = bytearray()
 
-bufferSize = 4096*2
+bufferSize = 2048
 
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 UDPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -107,7 +107,7 @@ try:
     server.serve_forever()
 
     while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[1]
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 finally:
     print("stopped")
 
