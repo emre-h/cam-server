@@ -77,7 +77,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    data = UDPServerSocket.recvfrom(bufferSize)[0]
                     frame = data
 
                     self.wfile.write(b'--FRAME\r\n')
@@ -104,7 +103,9 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 try:
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
-    server.serve_forever()    
+    server.serve_forever()
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 finally:
     print("stopped")
 

@@ -31,6 +31,8 @@ serverAddressPort   = ('63.33.239.182', 3500)
 
 bufferSize          = 4096*2
 
+UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
 class StreamingOutput(object):
     def __init__(self):
         self.frame = None
@@ -81,16 +83,13 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(frame)
                     self.wfile.write(b'\r\n')
-                    UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-                    UDPClientSocket.sendto(frame, serverAddressPort)
                     
+                    UDPClientSocket.sendto(frame, serverAddressPort)
                     #print("sending frame...")
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
-            finally:
-                UDPClientSocket.close()
         else:
             self.send_error(404)
             self.end_headers()
