@@ -33,6 +33,8 @@ PAGE="""\
 
 data = bytearray()
 
+bufferSize = 4096*2
+
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 class StreamingOutput(object):
@@ -91,7 +93,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
-    bufferSize = 4096*2
     UDPServerSocket.bind(("0.0.0.0", 3500))
     print('Listening on port %s ...' % 3500)
 
