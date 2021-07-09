@@ -60,6 +60,11 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    
+                    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+
+                    data = bytesAddressPair[0]
+
                     with data.condition:
                         data.condition.wait()
                         frame = data
@@ -90,11 +95,7 @@ try:
 finally:
     print("stopped")
 
-while True:
-    # Wait for client connections
-    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
 
-    data = bytesAddressPair[0]
     #address = bytesAddressPair[1]
 
     #f = open('myimage.jpeg', 'wb')
