@@ -33,10 +33,16 @@ PAGE="""\
 
 data = bytearray()
 
-bufferSize = 1024
+bufferSize = 2048
 
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 UDPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+def rec():
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
+        server.handle_request()
+        print("data has been taken")
 
 class StreamingOutput(object):
     def __init__(self):
@@ -101,15 +107,13 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
     
 try:
-    x = False
+    thread = threading.Thread(target=rec, args=[])
+    thread.start()
+    
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 
-    while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
-        server.handle_request()
-        print("data has been taken")
 finally:
     print("stopped")
 

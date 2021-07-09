@@ -27,9 +27,9 @@ PAGE="""\
 
 msgFromClient       = "Hello UDP Server"
 
-serverAddressPort   = ('172.31.46.217', 3500)
+serverAddressPort   = ('63.33.239.182', 3500)
 
-bufferSize          = 1024
+bufferSize          = 2048
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
