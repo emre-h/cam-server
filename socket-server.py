@@ -108,6 +108,7 @@ try:
 
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
+        server.handle_request()
         print("data has been taken")
 finally:
     print("stopped")
