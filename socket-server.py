@@ -102,6 +102,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     
 try:
     x = True
+    
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
 
