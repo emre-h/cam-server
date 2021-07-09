@@ -70,7 +70,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             try:
                 while True:
                     frame = data
-
                     self.wfile.write(b'--FRAME\r\n')
                     self.send_header('Content-Type', 'image/jpeg')
                     self.send_header('Content-Length', len(frame))
@@ -105,7 +104,7 @@ try:
     print('Listening on port %s ...' % 3500)
 
     while True:
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
+        data = StreamingOutput(UDPServerSocket.recvfrom(bufferSize)[0])
         
 finally:
     print("stopped")
