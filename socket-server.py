@@ -41,7 +41,6 @@ UDPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 def rec():
     while True:
         data = UDPServerSocket.recvfrom(bufferSize)[0]
-        server.handle_request()
         print("data has been taken")
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
