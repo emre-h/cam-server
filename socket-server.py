@@ -98,13 +98,13 @@ try:
 
     # Bind to address and ip
 
-    bufferSize = 4096
+    bufferSize = 4096*4
 
     UDPServerSocket.bind(("0.0.0.0", 3500))
     print('Listening on port %s ...' % 3500)
 
     while True:
-        data = StreamingOutput(UDPServerSocket.recvfrom(bufferSize)[0])
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
         
 finally:
     print("stopped")
