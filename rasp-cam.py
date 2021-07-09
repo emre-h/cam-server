@@ -89,7 +89,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
                     try:
                         UDPClientSocket.sendto(frame, serverAddressPort)
-                    except Exception e:
+                    except Exception as e:
                         print("error")
             except Exception as e:
                 logging.warning('Removed streaming client %s: %s',self.client_address, str(e))
