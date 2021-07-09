@@ -27,7 +27,7 @@ PAGE="""\
 
 msgFromClient       = "Hello UDP Server"
 
-serverAddressPort   = ('63.33.239.182', 3500)
+serverAddressPort   = ('172.31.46.217', 3500)
 
 bufferSize          = 1024
 
