@@ -22,10 +22,10 @@ from array import array
 PAGE="""\
 <html>
 <head>
-<title>Canlı aktarım</title>
+<title>Uydu Kamerasi</title>
 </head>
 <body>
-<center><h1>Canlı aktarım</h1></center>
+<center><h1>Uydu Kamerasi</h1></center>
 <center><img src="stream.mjpg" width="640" height="480"></center>
 </body>
 </html>
