@@ -8,6 +8,7 @@ import socket
 from threading import Condition
 from http import server
 
+import time
 import base64
 import io
 from PIL import Image
@@ -92,6 +93,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.wfile.write(b'\r\n')
                     
                     send_data(frame)
+                    time.sleep(0.1)
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
