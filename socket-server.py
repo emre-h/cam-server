@@ -100,9 +100,6 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
     
 try:
-    t1 = Thread(target=listenThread)
-    t1.start()
-
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()    
