@@ -39,6 +39,23 @@ print('Listening on port %s ...' % 3500)
 
 data = bytearray()
 
+class StreamingOutput(object):
+    def __init__(self):
+        self.frame = None
+        self.buffer = io.BytesIO()
+        self.condition = Condition()
+
+    def write(self, buf):
+        if buf.startswith(b'\xff\xd8'):
+            # New frame, copy the existing buffer's content and notify all
+            # clients it's available
+            self.buffer.truncate()
+            with self.condition:
+                self.frame = self.buffer.getvalue()
+                self.condition.notify_all()
+            self.buffer.seek(0)
+        return self.buffer.write(buf)
+
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -61,19 +78,14 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
-                    time.sleep(0.01)
-                    data = UDPServerSocket.recvfrom(bufferSize)[0]
+                    frame = base64.b64decode(data)
 
-                    while data != bytearray():
-                        frame = base64.b64decode(data)
-
-                        self.wfile.write(b'--FRAME\r\n')
-                        self.send_header('Content-Type', 'image/jpeg')
-                        self.send_header('Content-Length', len(frame))
-                        self.end_headers()
-                        self.wfile.write(frame)
-                        self.wfile.write(b'\r\n')
-                        
+                    self.wfile.write(b'--FRAME\r\n')
+                    self.send_header('Content-Type', 'image/jpeg')
+                    self.send_header('Content-Length', len(frame))
+                    self.end_headers()
+                    self.wfile.write(frame)
+                    self.wfile.write(b'\r\n')
             except Exception as e:
                 logging.warning(
                     'Removed streaming client %s: %s',
@@ -91,6 +103,9 @@ try:
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
+
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 finally:
     print("stopped")
 
