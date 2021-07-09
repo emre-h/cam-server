@@ -57,8 +57,6 @@ class StreamingOutput(object):
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
-        data = UDPServerSocket.recvfrom(bufferSize)[0]
-        
         if self.path == '/':
             self.send_response(301)
             self.send_header('Location', '/index.html')
@@ -107,6 +105,9 @@ try:
     address = ('', 3306)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
+
+    while True:
+        data = UDPServerSocket.recvfrom(bufferSize)[0]
 finally:
     print("stopped")
 
