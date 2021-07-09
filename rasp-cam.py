@@ -34,7 +34,7 @@ bufferSize          = 4096*2
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 def send_data(data):
-    UDPClientSocket.sendto(data, serverAddressPort)
+    UDPClientSocket.sendto(bytearray(data), serverAddressPort)
 
 class StreamingOutput(object):
     def __init__(self):
